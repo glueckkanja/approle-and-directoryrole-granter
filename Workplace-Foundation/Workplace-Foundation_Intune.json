@@ -11,7 +11,8 @@
             "DeviceManagementScripts.ReadWrite.All",
             "DeviceManagementServiceConfig.ReadWrite.All",
             "Domain.Read.All",
-            "Group.ReadWrite.All"
+            "Group.Create",
+            "Group.Read.All"
         ]
     }
 ]
