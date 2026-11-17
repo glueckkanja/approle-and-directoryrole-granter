@@ -1,0 +1,35 @@
+[
+    {
+        "Name": "Microsoft Graph",
+        "Id": "00000003-0000-0000-c000-000000000000",
+        "AppRoleAssignments": [
+            "AccessReview.Read.All",
+            "AdministrativeUnit.Read.All",
+            "Application.Read.All",
+            "CloudPC.Read.All",
+            "DeviceManagementApps.Read.All",
+            "DeviceManagementConfiguration.Read.All",
+            "DeviceManagementRBAC.Read.All",
+            "DeviceManagementScripts.Read.All",
+            "DeviceManagementServiceConfig.Read.All",
+            "Domain.Read.All",
+            "EntitlementManagement.Read.All",
+            "Group.Read.All",
+            "GroupSettings.Read.All",
+            "LicenseAssignment.Read.All",
+            "NetworkAccess.Read.All",
+            "Policy.Read.All",
+            "RoleManagement.Read.Directory",
+            "RoleManagementPolicy.Read.Directory",
+            "SharePointTenantSettings.Read.All",
+            "User.Read.All"
+        ]
+    },
+    {
+        "Name": "Office 365 Exchange Online",
+        "Id": "00000002-0000-0ff1-ce00-000000000000",
+        "AppRoleAssignments": [
+            "Exchange.ManageAsApp"
+        ]
+    }
+]

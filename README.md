@@ -32,6 +32,36 @@ This will open a browser to let a GA (or similiar admin) sign in and grant acces
 
 You can reapply these permissions at any time; for example if new permissions were added to the JSON files. Existing permissions will create (non-terminating) errors. You can ignore those. Currently, existing additional roles and permissions are not removed by this script.
 
+## Workplace Foundation
+
+Templates for the two app registrations of a Workplace Foundation tenant: the **apply** app (writes) and the **plan** app (read-only). They follow the wiki page *MS - Graph API Permissions*: the Managed Intune and Managed Entra templates contain what the wiki marks for that service, and `FullFeatureSet` contains every permission a module on Workplace Foundation's `main` needs, including optional features such as Exchange Online. The mapping of permissions to services is discussed in Workplace-Foundation/workplace-foundation#2770.
+
+| Template (folder `Workplace-Foundation`) | App | Contains |
+| --- | --- | --- |
+| `Workplace-Foundation_ManagedIntune_Apply.json` | apply | Managed Intune |
+| `Workplace-Foundation_ManagedIntune_Plan.json` | plan | Managed Intune, read-only |
+| `Workplace-Foundation_ManagedEntra_Apply.json` | apply | Managed Entra |
+| `Workplace-Foundation_ManagedEntra_Plan.json` | plan | Managed Entra, read-only |
+| `Workplace-Foundation_FullFeatureSet_Apply.json` | apply | everything, incl. `Exchange.ManageAsApp` (Office 365 Exchange Online) |
+| `Workplace-Foundation_FullFeatureSet_Plan.json` | plan | everything, read-only |
+| `Workplace-Foundation_ManagedEntra_Apply_DirectoryRoles.json` | apply | directory roles for Managed Entra |
+| `Workplace-Foundation_FullFeatureSet_Apply_DirectoryRoles.json` | apply | all directory roles of the apply app |
+| `Workplace-Foundation_FullFeatureSet_Plan_DirectoryRoles.json` | plan | all directory roles of the plan app |
+
+Managed Intune needs no directory role.
+
+`GrantAppPermToAppReg.ps1` **replaces** the permission list of the app registration. To combine templates, for a tenant with both services, run the second one with `-merge`, which adds to the existing list:
+
+```powershell
+. .\GrantAppPermToAppReg.ps1 -appRegObjectId "<apply app object id>" -permissionsTemplate .\Workplace-Foundation\Workplace-Foundation_ManagedIntune_Apply.json
+. .\GrantAppPermToAppReg.ps1 -appRegObjectId "<apply app object id>" -permissionsTemplate .\Workplace-Foundation\Workplace-Foundation_ManagedEntra_Apply.json -merge
+. .\AssignAzureADRoleToEntApp.ps1 -objectId "<apply enterprise app object id>" -rolesTemplate .\Workplace-Foundation\Workplace-Foundation_ManagedEntra_Apply_DirectoryRoles.json
+```
+
+Repeat with the `_Plan` templates for the plan app. Use `-merge` also when you add a template to an app that already has other permissions you want to keep.
+
+The older templates `Workplace-Foundation_FullFeatureSet.json`, `Workplace-Foundation_ReadOnly.json` and `Workplace-Foundation_Intune.json` are deprecated and stay unchanged for one Workplace Foundation release. Use `FullFeatureSet_Apply`, `FullFeatureSet_Plan` and `ManagedIntune_Apply` instead.
+
 ## Generic Examples
 
 ### Assign MS Graph permissions to an App Registration
