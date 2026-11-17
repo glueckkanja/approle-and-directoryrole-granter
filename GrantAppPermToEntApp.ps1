@@ -35,8 +35,14 @@ $permissions | ForEach-Object {
         $appRoles.add($_.Value, $_.Id)
     }
 
+    ## Report app roles the resource does not have, instead of the misleading "already assigned"
+    $unknownRoles = @($_.AppRoleAssignments | Where-Object { -not $appRoles.ContainsKey($_) })
+    if ($unknownRoles.Count -gt 0) {
+        "## - Unknown app roles for '$($resourceApp.DisplayName)', skipped: $($unknownRoles -join ', ')"
+    }
+
     ## Apply each permission to the Ent App/Mgd. Identity
-    $_.AppRoleAssignments | ForEach-Object {
+    $_.AppRoleAssignments | Where-Object { $appRoles.ContainsKey($_) } | ForEach-Object {
         "## Assigning $($resourceApp.DisplayName):$_"
         try {
             New-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $enterpriseAppObjId -AppRoleId $appRoles[$_] -ResourceId $resourceId -PrincipalId $enterpriseAppObjId -ErrorAction Stop | Out-Null

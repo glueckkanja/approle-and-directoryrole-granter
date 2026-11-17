@@ -1,0 +1,20 @@
+[
+    {
+        "Name": "Microsoft Graph",
+        "Id": "00000003-0000-0000-c000-000000000000",
+        "AppRoleAssignments": [
+            "Application.Read.All",
+            "DeviceManagementApps.Read.All",
+            "DeviceManagementConfiguration.Read.All",
+            "DeviceManagementRBAC.Read.All",
+            "DeviceManagementScripts.Read.All",
+            "DeviceManagementServiceConfig.Read.All",
+            "Domain.Read.All",
+            "Group.Read.All",
+            "LicenseAssignment.Read.All",
+            "Policy.Read.All",
+            "SharePointTenantSettings.Read.All",
+            "User.Read.All"
+        ]
+    }
+]
