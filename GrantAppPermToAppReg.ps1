@@ -56,11 +56,13 @@ if ($merge) {
     "## Merging with the permissions already on the App Registration..."
     $existingAccess = (Get-MgApplication -ApplicationId $appRegObjectId -Property RequiredResourceAccess).RequiredResourceAccess
     foreach ($existing in $existingAccess) {
-        $existingEntries = @($existing.ResourceAccess | ForEach-Object { @{ "Id" = $_.Id; "Type" = $_.Type } })
+        ## Plain hashtables only: the SDK silently drops pipeline output (PSObject-wrapped) when it builds the request body
+        $existingEntries = @(foreach ($access in $existing.ResourceAccess) { @{ "Id" = $access.Id; "Type" = $access.Type } })
         $item = $requiredResourceAccess | Where-Object { $_.resourceAppId -eq $existing.ResourceAppId } | Select-Object -First 1
         if ($item) {
             $known = @($item.resourceAccess | ForEach-Object { "$($_.Id)|$($_.Type)" })
-            $item.resourceAccess = [array](@($item.resourceAccess) + @($existingEntries | Where-Object { "$($_.Id)|$($_.Type)" -notin $known }))
+            $missingEntries = @(foreach ($entry in $existingEntries) { if ("$($entry.Id)|$($entry.Type)" -notin $known) { $entry } })
+            $item.resourceAccess = [array](@($item.resourceAccess) + $missingEntries)
         }
         else {
             $requiredResourceAccess += @{
