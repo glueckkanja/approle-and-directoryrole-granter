@@ -12,14 +12,20 @@
             "DeviceManagementConfiguration.ReadWrite.All",
             "DeviceManagementScripts.ReadWrite.All",
             "DeviceManagementServiceConfig.ReadWrite.All",
-            "Domain.Read.All",
+            "Domain.ReadWrite.All",
             "EntitlementManagement.ReadWrite.All",
             "Group.Create",
             "Group.Read.All",
             "GroupSettings.ReadWrite.All",
             "LicenseAssignment.ReadWrite.All",
             "NetworkAccess.ReadWrite.All",
+            "Organization.ReadWrite.All",
+            "OrgSettings-AppsAndServices.ReadWrite.All",
+            "OrgSettings-Forms.ReadWrite.All",
+            "OrgSettings-Microsoft365Install.ReadWrite.All",
+            "PeopleSettings.ReadWrite.All",
             "Policy.Read.All",
+            "Policy.ReadWrite.ApplicationConfiguration",
             "Policy.ReadWrite.AuthenticationFlows",
             "Policy.ReadWrite.AuthenticationMethod",
             "Policy.ReadWrite.Authorization",
@@ -29,6 +35,7 @@
             "Policy.ReadWrite.DeviceConfiguration",
             "Policy.ReadWrite.ExternalIdentities",
             "Policy.ReadWrite.PermissionGrant",
+            "ReportSettings.ReadWrite.All",
             "RoleManagement.ReadWrite.Directory",
             "RoleManagementPolicy.ReadWrite.Directory",
             "SharePointTenantSettings.ReadWrite.All",
@@ -40,6 +47,20 @@
         "Id": "00000002-0000-0ff1-ce00-000000000000",
         "AppRoleAssignments": [
             "Exchange.ManageAsApp"
+        ]
+    },
+    {
+        "Name": "ProjectWorkManagement",
+        "Id": "09abbdfd-ed23-44ee-a2d9-a627aa1c90f3",
+        "AppRoleAssignments": [
+            "OrgSettings-Planner.ReadWrite.All"
+        ]
+    },
+    {
+        "Name": "M365 License Manager",
+        "Id": "aeb86249-8ea3-49e2-900b-54cc8e308f85",
+        "AppRoleAssignments": [
+            "Policy.ReadWrite.AllowSelfServicePurchase"
         ]
     }
 ]

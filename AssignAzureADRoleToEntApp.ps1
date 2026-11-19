@@ -8,13 +8,14 @@ param(
     [Parameter(Mandatory = $true)]
     [string] $objectId,
     [string] $rolesTemplate = "RealmJoinVnext\RjvNextRoles.json",
+    # Use the session of an earlier Connect-MgGraph instead of signing in. It needs RoleManagement.ReadWrite.Directory.
+    [switch] $useExistingSession = $false,
     [switch] $disconnectAfterExecution = $false,
     [switch] $showErrors = $false
 )
 
-## Authenticate as admin (delegated). Use MS Graph PowerShell SDK to leverage existing (well known) clientId/app.
-## Will sign you in using your browser and ask for granting permissions if needed.
-Connect-MgGraph -Scopes "RoleManagement.ReadWrite.Directory"
+. $PSScriptRoot\GranterSession.ps1
+Connect-GranterGraph -Scopes "RoleManagement.ReadWrite.Directory" -UseExistingSession:$useExistingSession
 
 ## Read the roles template
 $targetRoles = Get-Content -Path $rolesTemplate | ConvertFrom-Json
