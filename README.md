@@ -70,6 +70,23 @@ Their app roles are resolved from the API's service principal in the tenant. If 
 
 Repeat with the `_Plan` templates for the plan app. Use `-merge` also when you add a template to an app that already has other permissions you want to keep.
 
+### Reuse an existing Microsoft Graph session
+
+By default each script signs in with `Connect-MgGraph` (delegated, in the browser). With `-useExistingSession`, `GrantAppPermToAppReg.ps1`, `GrantAppPermToEntApp.ps1` and `AssignAzureADRoleToEntApp.ps1` use the session you opened before instead, delegated or app-only. They print its tenant and account (or app) and stop before changing anything if the session is missing or lacks a scope:
+
+| Script | Needs |
+| --- | --- |
+| `GrantAppPermToAppReg.ps1` | `Application.ReadWrite.All`; with `-updateEnterpriseApp` also `AppRoleAssignment.ReadWrite.All` |
+| `GrantAppPermToEntApp.ps1` | `AppRoleAssignment.ReadWrite.All`, `Application.Read.All` |
+| `AssignAzureADRoleToEntApp.ps1` | `RoleManagement.ReadWrite.Directory` |
+
+```powershell
+Connect-MgGraph -TenantId "<tenant>" -Scopes "Application.ReadWrite.All", "AppRoleAssignment.ReadWrite.All"
+. .\GrantAppPermToAppReg.ps1 -appRegObjectId "<apply app object id>" -permissionsTemplate .\Workplace-Foundation\Workplace-Foundation_FullFeatureSet_Apply.json -merge -updateEnterpriseApp -useExistingSession
+```
+
+Check the printed tenant: the scripts act on whatever tenant the session belongs to.
+
 The older templates `Workplace-Foundation_FullFeatureSet.json`, `Workplace-Foundation_ReadOnly.json` and `Workplace-Foundation_Intune.json` are deprecated and stay unchanged for one Workplace Foundation release. Use `FullFeatureSet_Apply`, `FullFeatureSet_Plan` and `ManagedIntune_Apply` instead.
 
 ## Generic Examples

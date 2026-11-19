@@ -12,13 +12,20 @@ param(
     # Add the template's permissions to the ones the app registration already has, instead of replacing them.
     # Use it to combine templates, e.g. Workplace-Foundation_ManagedIntune_Apply.json, then Workplace-Foundation_ManagedEntra_Apply.json.
     [switch] $merge = $false,
+    # Use the session of an earlier Connect-MgGraph instead of signing in. It needs Application.ReadWrite.All,
+    # and with -updateEnterpriseApp also AppRoleAssignment.ReadWrite.All.
+    [switch] $useExistingSession = $false,
     [switch] $disconnectAfterExecution = $false,
     [switch] $showErrors = $false
 )
 
-## Authenticate as admin (delegated). Use MS Graph PowerShell SDK to leverage existing (well known) clientId/app.
-## Will sign you in using your browser and ask for granting permissions if needed.
-Connect-MgGraph -Scopes "Application.ReadWrite.All" 
+. $PSScriptRoot\GranterSession.ps1
+## Check every scope up front, so a missing one stops the script before it changes the App Registration
+$requiredScopes = @("Application.ReadWrite.All")
+if ($updateEnterpriseApp -and $useExistingSession) {
+    $requiredScopes += "AppRoleAssignment.ReadWrite.All"
+}
+Connect-GranterGraph -Scopes $requiredScopes -UseExistingSession:$useExistingSession
 
 ## Read the permission template
 $permissions = Get-Content -Path $permissionsTemplate | ConvertFrom-Json
@@ -97,7 +104,7 @@ if ($updateEnterpriseApp) {
     $entApp = Get-MgServicePrincipal -Filter "AppId eq '$((Get-MgApplication -ApplicationId $appRegObjectId).AppId)'"
 
     ## Granting the permission to the managed/linked enterprise app
-    . $PSScriptRoot\GrantAppPermToEntApp.ps1 -enterpriseAppObjId $entApp.Id -permissionsTemplate $permissionsTemplate
+    . $PSScriptRoot\GrantAppPermToEntApp.ps1 -enterpriseAppObjId $entApp.Id -permissionsTemplate $permissionsTemplate -useExistingSession:$useExistingSession
 }
 else {
     ## Option 2 - Grant new permissions manually:

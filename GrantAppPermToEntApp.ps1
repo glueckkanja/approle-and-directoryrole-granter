@@ -10,13 +10,15 @@ param(
     [Parameter(Mandatory = $true)]
     [string] $enterpriseAppObjId,
     [string] $permissionsTemplate = "RealmJoinVnext\RjvNextPermissions.json",
+    # Use the session of an earlier Connect-MgGraph instead of signing in. It needs AppRoleAssignment.ReadWrite.All
+    # and Application.Read.All (or Application.ReadWrite.All).
+    [switch] $useExistingSession = $false,
     [switch] $disconnectAfterExecution = $false,
     [switch] $showErrors = $false
 )
 
-## Authenticate as admin (delegated). Use MS Graph PowerShell SDK to leverage existing (well known) clientId/app.
-## Will sign you in using your browser and ask for granting permissions if needed.
-Connect-MgGraph -Scopes "AppRoleAssignment.ReadWrite.All,Application.Read.All"
+. $PSScriptRoot\GranterSession.ps1
+Connect-GranterGraph -Scopes "AppRoleAssignment.ReadWrite.All", "Application.Read.All" -UseExistingSession:$useExistingSession
 
 ## Read the permission template
 $permissions = Get-Content -Path $permissionsTemplate | ConvertFrom-Json
