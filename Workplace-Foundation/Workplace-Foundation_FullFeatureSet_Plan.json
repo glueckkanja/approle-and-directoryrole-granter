@@ -18,7 +18,13 @@
             "GroupSettings.Read.All",
             "LicenseAssignment.Read.All",
             "NetworkAccess.Read.All",
+            "Organization.Read.All",
+            "OrgSettings-AppsAndServices.Read.All",
+            "OrgSettings-Forms.Read.All",
+            "OrgSettings-Microsoft365Install.Read.All",
+            "PeopleSettings.Read.All",
             "Policy.Read.All",
+            "ReportSettings.Read.All",
             "RoleManagement.Read.Directory",
             "RoleManagementPolicy.Read.Directory",
             "SharePointTenantSettings.Read.All",
@@ -30,6 +36,20 @@
         "Id": "00000002-0000-0ff1-ce00-000000000000",
         "AppRoleAssignments": [
             "Exchange.ManageAsApp"
+        ]
+    },
+    {
+        "Name": "ProjectWorkManagement",
+        "Id": "09abbdfd-ed23-44ee-a2d9-a627aa1c90f3",
+        "AppRoleAssignments": [
+            "OrgSettings-Planner.Read.All"
+        ]
+    },
+    {
+        "Name": "M365 License Manager",
+        "Id": "aeb86249-8ea3-49e2-900b-54cc8e308f85",
+        "AppRoleAssignments": [
+            "Policy.Read.AllowSelfServicePurchase"
         ]
     }
 ]

@@ -26,7 +26,13 @@ $permissions | ForEach-Object {
     $appId = $_.Id
 
     ## Get Service Principal from Application:
-    $resourceApp = Get-MgServicePrincipal -Filter "AppId eq '$appId'" 
+    $resourceApp = Get-MgServicePrincipal -Filter "AppId eq '$appId'"
+
+    ## An API other than Microsoft Graph may have no service principal in the tenant yet
+    if (-not $resourceApp) {
+        "## - API '$($_.Name)' ($appId) has no service principal in this tenant, skipped: $($_.AppRoleAssignments -join ', '). Create it with: New-MgServicePrincipal -AppId '$appId'"
+        return
+    }
     $resourceId = $resourceApp.Id
 
     ## Get all AppRoles. Create a hashtable giving "Claim -> AppRoleId"

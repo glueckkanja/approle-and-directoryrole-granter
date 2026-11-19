@@ -42,13 +42,23 @@ Templates for the two app registrations of a Workplace Foundation tenant: the **
 | `Workplace-Foundation_ManagedIntune_Plan.json` | plan | Managed Intune, read-only |
 | `Workplace-Foundation_ManagedEntra_Apply.json` | apply | Managed Entra |
 | `Workplace-Foundation_ManagedEntra_Plan.json` | plan | Managed Entra, read-only |
-| `Workplace-Foundation_FullFeatureSet_Apply.json` | apply | everything, incl. `Exchange.ManageAsApp` (Office 365 Exchange Online) |
+| `Workplace-Foundation_FullFeatureSet_Apply.json` | apply | everything, incl. the APIs other than Microsoft Graph (see below) |
 | `Workplace-Foundation_FullFeatureSet_Plan.json` | plan | everything, read-only |
 | `Workplace-Foundation_ManagedEntra_Apply_DirectoryRoles.json` | apply | directory roles for Managed Entra |
 | `Workplace-Foundation_FullFeatureSet_Apply_DirectoryRoles.json` | apply | all directory roles of the apply app |
 | `Workplace-Foundation_FullFeatureSet_Plan_DirectoryRoles.json` | plan | all directory roles of the plan app |
 
 Managed Intune needs no directory role.
+
+Besides Microsoft Graph, the `FullFeatureSet` templates contain three other APIs:
+
+| API | App ID | Apply | Plan | Workplace Foundation flag |
+| --- | --- | --- | --- | --- |
+| Office 365 Exchange Online | `00000002-0000-0ff1-ce00-000000000000` | `Exchange.ManageAsApp` | `Exchange.ManageAsApp` | `manage_exo_*` |
+| ProjectWorkManagement | `09abbdfd-ed23-44ee-a2d9-a627aa1c90f3` | `OrgSettings-Planner.ReadWrite.All` | `OrgSettings-Planner.Read.All` | `manage_planner_settings` |
+| M365 License Manager | `aeb86249-8ea3-49e2-900b-54cc8e308f85` | `Policy.ReadWrite.AllowSelfServicePurchase` | `Policy.Read.AllowSelfServicePurchase` | `manage_self_service_purchase` |
+
+Their app roles are resolved from the API's service principal in the tenant. If a tenant has none, `GrantAppPermToAppReg.ps1` stops before it changes anything and `GrantAppPermToEntApp.ps1` skips that API; both print the command that creates the service principal (`New-MgServicePrincipal -AppId <app ID>`).
 
 `GrantAppPermToAppReg.ps1` **replaces** the permission list of the app registration. To combine templates, for a tenant with both services, run the second one with `-merge`, which adds to the existing list:
 
