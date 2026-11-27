@@ -6,6 +6,7 @@
             "AccessReview.Read.All",
             "AdministrativeUnit.Read.All",
             "Application.Read.All",
+            "BrowserSiteLists.Read.All",
             "CloudPC.Read.All",
             "DeviceManagementApps.Read.All",
             "DeviceManagementConfiguration.Read.All",
